@@ -11,7 +11,6 @@ name := fusee
 dir_source := src
 dir_build := build
 dir_out := out
-dir_exosphere := ../exosphere
 
 ARCH := -march=armv4t -mtune=arm7tdmi -mthumb -mthumb-interwork
 
@@ -26,15 +25,13 @@ CFLAGS = \
 	-ffunction-sections \
 	-fdata-sections \
 	-std=gnu11 \
-	-Werror \
 	-Wall
 
 LDFLAGS = -specs=linker.specs -g $(ARCH)
 
 objects =	$(patsubst $(dir_source)/%.s, $(dir_build)/%.o, \
 			$(patsubst $(dir_source)/%.c, $(dir_build)/%.o, \
-			$(call rwildcard, $(dir_source), *.s *.c))) \
-			$(dir_build)/exosphere.bin.o
+			$(call rwildcard, $(dir_source), *.s *.c)))
 
 define bin2o
 	bin2s $< | $(AS) -o $(@)
@@ -45,11 +42,8 @@ all: $(dir_out)/$(name).bin
 
 .PHONY: clean
 clean:
-	@$(MAKE) -C $(dir_exosphere) clean
 	@rm -rf $(dir_build)
 	@rm -rf $(dir_out)
-
-.PHONY: $(dir_exosphere)
 
 $(dir_out)/$(name).bin: $(dir_build)/$(name).elf
 	@mkdir -p "$(@D)"
@@ -57,13 +51,6 @@ $(dir_out)/$(name).bin: $(dir_build)/$(name).elf
 
 $(dir_build)/$(name).elf: $(objects)
 	$(LINK.o) $(OUTPUT_OPTION) $^
-
-$(dir_exosphere)/out/exosphere.bin: $(dir_exosphere)
-	@$(MAKE) -C $<
-
-$(dir_build)/exosphere.bin: $(dir_exosphere)/out/exosphere.bin
-	@mkdir -p "$(@D)"
-	@cp $< $(@D)
 
 $(dir_build)/%.bin.o: $(dir_build)/%.bin
 	@$(bin2o)

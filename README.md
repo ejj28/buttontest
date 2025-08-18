@@ -8,6 +8,7 @@ buttontest is based on [JigTester](https://github.com/LucaCorigliano/JigTester) 
 
 
 ### Changes made in buttontest:
+- Removed unused exosphere code from repo
 
 ### Changes made in [JigTester](https://github.com/LucaCorigliano/JigTester):
 - gpio.c / gpio.h / t210.h / types.h from Hekate IPL (https://github.com/nwert/hekate)
